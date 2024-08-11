@@ -41,7 +41,11 @@ class ServerResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')->label('Server Name'),
                 Tables\Columns\TextColumn::make('url')->label('Server URL'),
-
+                Tables\Columns\IconColumn::make('emailtemplate_exists')
+                    ->label('Has Mail Template ? ')
+                    ->exists('emailtemplate')
+                    ->boolean()
+                    ->alignCenter(),
             ])
             ->filters([
                 //

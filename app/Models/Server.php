@@ -11,8 +11,8 @@ class Server extends Model
         'name',
         'url',
     ];
-    public function emailTemplates()
+    public function emailTemplate()
     {
-        return $this->hasMany(EmailTemplate::class);
+        return $this->hasOne(EmailTemplate::class);
     }
 }

@@ -3,10 +3,14 @@
 namespace App\Filament\Pages;
 
 use App\Http\Controllers\EmailController;
+use App\Models\EmailTemplate;
 use App\Models\Server;
+use Filament\Actions\Action;
+use Filament\Actions\CreateAction;
 use Filament\Pages\Page;
 use Filament\Forms;
 use Filament\Notifications\Notification;
+use Livewire\Livewire;
 
 class SubscriptionForm extends Page
 {
@@ -40,13 +44,15 @@ class SubscriptionForm extends Page
             ])->schema([
                 Forms\Components\Select::make('server')
                     ->options(
-                        Server::all()->pluck('name', 'id')
+                        Server::has('emailTemplate')->pluck('name', 'id')
                     )
                     ->required()
                     ->label('Select Server')
                     ->placeholder('Select Server')
                     ->helperText('Select IPTV Server')
                     ->columnSpan(1)
+                    ->hintIcon('heroicon-o-information-circle')
+                    ->hintIconTooltip('Only Servers with Email Template will be displayed.')
                     ->native(false),
 
 
@@ -162,5 +168,23 @@ class SubscriptionForm extends Page
                 ->danger()
                 ->send();
         }
+    }
+
+    protected function getActions(): array
+    {
+        return [
+            Action::make('Preview')
+                ->color('primary')
+                ->action(fn() => $this->redirect($this->preview(), navigate: true))
+        ];
+    }
+
+    public function preview()
+    {
+        $data = $this->form->getState();
+        return route('email-template.preview', [
+            'emailTemplate' => Server::find($data['server'])->emailTemplate->id,
+            'data' => $data
+        ]);
     }
 }

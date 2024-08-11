@@ -138,15 +138,6 @@ class EmailTemplateResource extends Resource
         ];
     }
 
-    protected function showPreview()
-    {
-        $template = $this->record->template;
-        $previewUrl = route('email-template.preview', ['emailTemplate' => $this->record->id]);
-
-        // Return a redirect or modify as needed
-        return redirect($previewUrl);
-    }
-
     public static function getPages(): array
     {
         return [
